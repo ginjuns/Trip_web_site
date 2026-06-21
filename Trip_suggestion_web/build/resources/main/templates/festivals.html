@@ -1,0 +1,1789 @@
+<!DOCTYPE html>
+
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <title>축제 캘린더</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+          rel="stylesheet">
+    <link rel="stylesheet"
+          href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
+    <style>
+
+        *{
+            margin:0;
+            padding:0;
+            box-sizing:border-box;
+        }
+
+        body{
+
+            background:
+                    linear-gradient(
+                            180deg,
+                            #eef5ff 0%,
+                            #f8fafc 100%
+                    );
+
+            font-family:
+                    "Pretendard",
+                    "Noto Sans KR",
+                    sans-serif;
+
+        }
+
+        .container-custom{
+
+            width: 100%;
+
+            max-width:1200px;
+
+            margin:0 auto;
+
+            padding:40px;
+
+        }
+
+        .navbar-custom{
+
+            background:white;
+
+            border-radius:24px;
+
+            padding:20px 30px;
+
+            margin-bottom:30px;
+
+            box-shadow:
+                    0 10px 30px rgba(0,0,0,.05);
+
+        }
+
+        .logo{
+
+            text-decoration:none;
+
+            font-size:30px;
+
+            font-weight:800;
+
+            color:#2563eb;
+
+        }
+
+        .hero{
+
+            background:
+                    linear-gradient(
+                            135deg,
+                            #2563eb,
+                            #60a5fa
+                    );
+
+            border-radius:30px;
+
+            color:white;
+
+            padding:50px;
+
+            margin-bottom:30px;
+
+        }
+
+        .hero h1{
+
+            font-size:52px;
+
+            font-weight:900;
+
+        }
+
+        .hero p{
+
+            opacity:.9;
+
+            font-size:18px;
+
+        }
+
+        .month-section{
+
+            background:white;
+
+            border-radius:30px;
+
+            padding:35px;
+
+            margin-bottom:30px;
+
+            box-shadow:
+                    0 10px 30px rgba(0,0,0,.05);
+
+        }
+
+        .month-title{
+
+            font-size:30px;
+
+            font-weight:800;
+
+            margin-bottom:20px;
+
+        }
+
+        .festival-grid{
+
+            display:grid;
+
+            grid-template-columns:
+            repeat(3,minmax(0,1fr));
+
+            gap:24px;
+
+        }
+
+        .festival-card{
+
+            background:white;
+
+            border-radius:20px;
+
+            overflow:hidden;
+
+            box-shadow:
+                    0 8px 25px rgba(0,0,0,.08);
+
+            transition:.2s;
+
+            display:flex;
+
+            flex-direction:column;
+        }
+
+        .festival-card:hover{
+
+            transform:
+                    translateY(-5px);
+
+        }
+
+        .festival-card img{
+
+            width:100%;
+
+            height:220px;
+
+            object-fit:cover;
+
+        }
+
+        .festival-body{
+
+            padding:20px;
+
+            flex:1;
+
+            display:flex;
+
+            flex-direction:column;
+        }
+
+        .festival-body h5{
+
+            font-size:20px;
+
+            font-weight:700;
+
+            margin-bottom:8px;
+
+        }
+
+        .festival-body p{
+
+            font-size:14px;
+
+            margin-bottom:8px;
+
+            color:#64748b;
+
+        }
+
+        .festival-title{
+
+            font-size:20px;
+
+            font-weight:800;
+
+            min-height:60px;
+
+            line-height:1.4;
+
+        }
+
+        .festival-date{
+
+            background:#eff6ff;
+
+            color:#2563eb;
+
+            padding:15px;
+
+            border-radius:14px;
+
+            font-weight:700;
+
+            margin-top:auto;
+
+            margin-bottom:12px;
+
+            line-height:1.8;
+
+            text-align:center;
+
+        }
+
+        .festival-address{
+
+            color:#64748b;
+
+        }
+
+        .month-nav{
+
+            display:flex;
+
+            flex-wrap:nowrap;
+
+            justify-content:center;
+
+            gap:8px;
+
+            margin-bottom:30px;
+
+        }
+
+        .month-nav a{
+
+            text-decoration:none;
+
+            padding:12px 20px;
+
+            border-radius:999px;
+
+            background:white;
+
+            color:#2563eb;
+
+            font-weight:700;
+
+            box-shadow:
+                    0 5px 15px rgba(0,0,0,.08);
+
+        }
+
+        .month-nav a:hover{
+
+            background:#2563eb;
+
+            color:white;
+
+        }
+
+        .month-btn{
+
+            border:none;
+
+            background:white;
+
+            color:#2563eb;
+
+            padding:10px 14px;
+
+            font-size:14px;
+
+            border-radius:999px;
+
+            font-weight:700;
+
+            cursor:pointer;
+
+            box-shadow:
+                    0 5px 15px rgba(0,0,0,.08);
+
+            transition:.2s;
+
+        }
+
+        .month-btn:hover{
+
+            transform:translateY(-2px);
+
+        }
+
+        .month-btn.active{
+
+            background:
+                    linear-gradient(
+                            135deg,
+                            #2563eb,
+                            #60a5fa
+                    );
+
+            color:white;
+
+        }
+
+        .month-section{
+
+            display:none;
+
+        }
+
+        .active-month{
+
+            display:block;
+
+        }
+
+        .festival-card.finished{
+
+            opacity:.45;
+
+            filter:grayscale(100%);
+
+        }
+
+        .festival-status{
+
+            display:inline-block;
+
+            align-items:center;
+
+            justify-content:center;
+
+            width:fit-content;
+
+            align-self:flex-start;
+
+            padding:6px 12px;
+
+            border-radius:999px;
+
+            font-size:13px;
+
+            font-weight:700;
+
+            margin-bottom:10px;
+
+        }
+
+        .status-upcoming{
+
+            background:#dbeafe;
+
+            color:#2563eb;
+
+        }
+
+        .status-ongoing{
+
+            background:#dcfce7;
+
+            color:#15803d;
+
+        }
+
+        .status-finished{
+
+            background:#fee2e2;
+
+            color:#dc2626;
+
+        }
+
+        .dark-mode .festival-card{
+
+            background:#1e293b !important;
+
+        }
+
+        .dark-mode .festival-title{
+
+            color:white !important;
+
+        }
+
+        .dark-mode .festival-address{
+
+            color:#cbd5e1 !important;
+
+        }
+
+        .dark-mode .festival-date{
+
+            background:#334155 !important;
+
+            color:white !important;
+
+        }
+
+        .dark-mode .status-upcoming{
+
+            background:#1e40af !important;
+
+            color:white !important;
+
+        }
+
+        .dark-mode .status-ongoing{
+
+            background:#15803d !important;
+
+            color:white !important;
+
+        }
+
+        .dark-mode .status-finished{
+
+            background:#b91c1c !important;
+
+            color:white !important;
+
+        }
+
+        .theme-btn{
+
+            width:45px;
+
+            height:45px;
+
+            border-radius:50%;
+
+        }
+
+        .dark-mode{
+
+            background:#0f172a !important;
+
+            color:white !important;
+
+        }
+
+        .dark-mode .navbar-custom,
+        .dark-mode .month-section {
+
+            background: #1e293b !important;
+
+            color: white !important;
+
+        }
+
+        .dark-mode .festival-title{
+
+            color:white;
+
+        }
+
+        .dark-mode .festival-address{
+
+            color:#cbd5e1;
+
+        }
+
+        .dark-mode .festival-date{
+
+            background:#1e3a8a;
+
+            color:white;
+
+        }
+
+        .dark-mode .modal-content{
+
+            background:#1e293b;
+
+            color:white;
+
+        }
+
+        .icon-btn{
+
+            width:48px;
+
+            height:48px;
+
+            border:none;
+
+            border-radius:50%;
+
+            background:#eff6ff;
+
+            color:#2563eb;
+
+            font-size:20px;
+
+            display:flex;
+
+            align-items:center;
+
+            justify-content:center;
+
+            transition:.2s;
+
+        }
+
+        .icon-btn:hover{
+
+            background:#dbeafe;
+
+            transform:scale(1.05);
+
+        }
+
+        .theme-btn{
+
+            position: fixed;
+
+            right: 30px;
+
+            bottom: 30px;
+
+            width: 60px;
+
+            height: 60px;
+
+            border: none;
+
+            border-radius: 50%;
+
+            background: #2563eb;
+
+            color: white;
+
+            font-size: 24px;
+
+            cursor: pointer;
+
+            box-shadow:
+                    0 10px 25px rgba(37,99,235,.35);
+
+            z-index: 9999;
+
+        }
+
+        .suggestion-box{
+
+            position:absolute;
+
+            top:100%;
+
+            left:0;
+
+            right:0;
+
+            background:white;
+
+            border-radius:12px;
+
+            box-shadow:
+                    0 10px 25px rgba(0,0,0,.08);
+
+            z-index:999;
+
+            display:none;
+
+        }
+
+        .suggestion-item{
+
+            padding:12px 15px;
+
+            cursor:pointer;
+
+        }
+
+        .suggestion-item:hover{
+
+            background:#eff6ff;
+
+        }
+
+        .dark-mode .suggestion-box{
+
+            background:#1e293b;
+
+        }
+
+        .dark-mode .suggestion-item{
+
+            color:white;
+
+        }
+
+        .dark-mode .suggestion-item:hover{
+
+            background:#334155;
+
+        }
+
+        .position-relative{
+
+            width:100%;
+
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+<div class="container-custom">
+
+    <div class="navbar-custom d-flex justify-content-between align-items-center">
+
+        <a href="/"
+           class="logo">
+
+            ✈️ TripMate AI
+
+        </a>
+
+        <div class="d-flex align-items-center gap-2">
+
+            <button
+                    class="icon-btn"
+                    data-bs-toggle="modal"
+                    data-bs-target="#searchModal">
+
+                <i class="bi bi-search"></i>
+
+            </button>
+
+            <a href="/"
+               class="btn btn-primary">
+
+                홈 화면으로 이동
+
+            </a>
+
+        </div>
+    </div>
+
+    <div class="hero">
+
+        <h1>
+
+            🎉 전국 축제 캘린더
+
+        </h1>
+
+        <p>
+
+            월별로 예정된 축제를 확인해보세요.
+
+        </p>
+
+    </div>
+
+    <div class="month-nav">
+
+        <button class="month-btn"
+                onclick="showMonth('m01', this)">
+            ❄️ 1월
+        </button>
+
+        <button class="month-btn"
+                onclick="showMonth('m02', this)">
+            ❤️ 2월
+        </button>
+
+        <button class="month-btn"
+                onclick="showMonth('m03', this)">
+            🌸 3월
+        </button>
+
+        <button class="month-btn"
+                onclick="showMonth('m04', this)">
+            🌷 4월
+        </button>
+
+        <button class="month-btn"
+                onclick="showMonth('m05', this)">
+            🌿 5월
+        </button>
+
+        <button class="month-btn"
+                onclick="showMonth('m06', this)">
+            ☀️ 6월
+        </button>
+
+        <button class="month-btn"
+                onclick="showMonth('m07', this)">
+            🌊 7월
+        </button>
+
+        <button class="month-btn"
+                onclick="showMonth('m08', this)">
+            🍉 8월
+        </button>
+
+        <button class="month-btn"
+                onclick="showMonth('m09', this)">
+            🍁 9월
+        </button>
+
+        <button class="month-btn"
+                onclick="showMonth('m10', this)">
+            🎃 10월
+        </button>
+
+        <button class="month-btn"
+                onclick="showMonth('m11', this)">
+            🍂 11월
+        </button>
+
+        <button class="month-btn"
+                onclick="showMonth('m12', this)">
+            🎄 12월
+        </button>
+
+    </div>
+    <div class="month-section"
+         id="m01">
+
+        <div class="month-title">
+
+            ❄️ 1월 축제
+
+        </div>
+
+        <div class="festival-grid">
+
+            <div class="festival-card"
+                 th:classappend="${festival.finished} ? ' finished' : ''"
+                 th:each="festival : ${festivals}"
+                 th:if="${#strings.substring(festival.startDate,4,6) == '01'}">
+
+                <img th:src="${festival.image}">
+
+                <div class="festival-body">
+
+                    <div class="festival-status"
+                         th:classappend="
+     ${festival.status == '예정'} ? ' status-upcoming' :
+     (${festival.status == '진행중'} ? ' status-ongoing' :
+     ' status-finished')">
+
+                        <span th:text="${festival.status}"></span>
+
+                    </div>
+
+                    <div class="festival-title"
+                         th:text="${festival.title}"></div>
+
+                    <div class="festival-date">
+
+                        📅 행사기간
+
+                        <br>
+
+                        <span th:text="${#strings.substring(festival.startDate,0,4)}"></span>.
+                        <span th:text="${#strings.substring(festival.startDate,4,6)}"></span>.
+                        <span th:text="${#strings.substring(festival.startDate,6,8)}"></span>
+
+                        ~
+
+                        <span th:text="${#strings.substring(festival.endDate,0,4)}"></span>.
+                        <span th:text="${#strings.substring(festival.endDate,4,6)}"></span>.
+                        <span th:text="${#strings.substring(festival.endDate,6,8)}"></span>
+
+                    </div>
+
+
+                    <div class="festival-address"
+                         th:text="${festival.address}"></div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="month-section"
+         id="m02">
+
+        <div class="month-title">
+
+            ❤️ 2월 축제
+
+        </div>
+
+        <div class="festival-grid">
+
+            <div class="festival-card"
+                 th:classappend="${festival.finished} ? ' finished' : ''"
+                 th:each="festival : ${festivals}"
+                 th:if="${#strings.substring(festival.startDate,4,6) == '02'}">
+
+                <img th:src="${festival.image}">
+
+                <div class="festival-body">
+
+                    <div class="festival-status"
+                         th:classappend="
+     ${festival.status == '예정'} ? ' status-upcoming' :
+     (${festival.status == '진행중'} ? ' status-ongoing' :
+     ' status-finished')">
+
+                        <span th:text="${festival.status}"></span>
+
+                    </div>
+
+                    <div class="festival-title"
+                         th:text="${festival.title}"></div>
+
+                    <div class="festival-date">
+
+                        📅 행사기간
+
+                        <br>
+
+                        <span th:text="${#strings.substring(festival.startDate,0,4)}"></span>.
+                        <span th:text="${#strings.substring(festival.startDate,4,6)}"></span>.
+                        <span th:text="${#strings.substring(festival.startDate,6,8)}"></span>
+
+                        ~
+
+                        <span th:text="${#strings.substring(festival.endDate,0,4)}"></span>.
+                        <span th:text="${#strings.substring(festival.endDate,4,6)}"></span>.
+                        <span th:text="${#strings.substring(festival.endDate,6,8)}"></span>
+
+                    </div>
+
+                    <div class="festival-address"
+                         th:text="${festival.address}"></div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="month-section"
+         id="m03">
+
+        <div class="month-title">
+
+            🌸 3월 축제
+
+        </div>
+
+        <div class="festival-grid">
+
+            <div class="festival-card"
+                 th:classappend="${festival.finished} ? ' finished' : ''"
+                 th:each="festival : ${festivals}"
+                 th:if="${#strings.substring(festival.startDate,4,6) == '03'}">
+
+                <img th:src="${festival.image}">
+
+                <div class="festival-body">
+
+                    <div class="festival-status"
+                         th:classappend="
+     ${festival.status == '예정'} ? ' status-upcoming' :
+     (${festival.status == '진행중'} ? ' status-ongoing' :
+     ' status-finished')">
+
+                        <span th:text="${festival.status}"></span>
+
+                    </div>
+
+                    <div class="festival-title"
+                         th:text="${festival.title}"></div>
+
+                    <div class="festival-date">
+
+                        📅 행사기간
+
+                        <br>
+
+                        <span th:text="${#strings.substring(festival.startDate,0,4)}"></span>.
+                        <span th:text="${#strings.substring(festival.startDate,4,6)}"></span>.
+                        <span th:text="${#strings.substring(festival.startDate,6,8)}"></span>
+
+                        ~
+
+                        <span th:text="${#strings.substring(festival.endDate,0,4)}"></span>.
+                        <span th:text="${#strings.substring(festival.endDate,4,6)}"></span>.
+                        <span th:text="${#strings.substring(festival.endDate,6,8)}"></span>
+
+                    </div>
+
+                    <div class="festival-address"
+                         th:text="${festival.address}"></div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="month-section"
+         id="m04">
+
+        <div class="month-title">
+
+            🌷 4월 축제
+
+        </div>
+
+        <div class="festival-grid">
+
+            <div class="festival-card"
+                 th:classappend="${festival.finished} ? ' finished' : ''"
+                 th:each="festival : ${festivals}"
+                 th:if="${#strings.substring(festival.startDate,4,6) == '04'}">
+
+                <img th:src="${festival.image}">
+
+                <div class="festival-body">
+
+                    <div class="festival-status"
+                         th:classappend="
+     ${festival.status == '예정'} ? ' status-upcoming' :
+     (${festival.status == '진행중'} ? ' status-ongoing' :
+     ' status-finished')">
+
+                        <span th:text="${festival.status}"></span>
+
+                    </div>
+
+                    <div class="festival-title"
+                         th:text="${festival.title}"></div>
+
+                    <div class="festival-date">
+
+                        📅 행사기간
+
+                        <br>
+
+                        <span th:text="${#strings.substring(festival.startDate,0,4)}"></span>.
+                        <span th:text="${#strings.substring(festival.startDate,4,6)}"></span>.
+                        <span th:text="${#strings.substring(festival.startDate,6,8)}"></span>
+
+                        ~
+
+                        <span th:text="${#strings.substring(festival.endDate,0,4)}"></span>.
+                        <span th:text="${#strings.substring(festival.endDate,4,6)}"></span>.
+                        <span th:text="${#strings.substring(festival.endDate,6,8)}"></span>
+
+                    </div>
+
+                    <div class="festival-address"
+                         th:text="${festival.address}"></div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="month-section"
+         id="m05">
+
+        <div class="month-title">
+
+            🌿 5월 축제
+
+        </div>
+
+        <div class="festival-grid">
+
+            <div class="festival-card"
+                 th:classappend="${festival.finished} ? ' finished' : ''"
+                 th:each="festival : ${festivals}"
+                 th:if="${#strings.substring(festival.startDate,4,6) == '05'}">
+
+                <img th:src="${festival.image}">
+
+                <div class="festival-body">
+
+                    <div class="festival-status"
+                         th:classappend="
+     ${festival.status == '예정'} ? ' status-upcoming' :
+     (${festival.status == '진행중'} ? ' status-ongoing' :
+     ' status-finished')">
+
+                        <span th:text="${festival.status}"></span>
+
+                    </div>
+
+                    <div class="festival-title"
+                         th:text="${festival.title}"></div>
+
+                    <div class="festival-date">
+
+                        📅 행사기간
+
+                        <br>
+
+                        <span th:text="${#strings.substring(festival.startDate,0,4)}"></span>.
+                        <span th:text="${#strings.substring(festival.startDate,4,6)}"></span>.
+                        <span th:text="${#strings.substring(festival.startDate,6,8)}"></span>
+
+                        ~
+
+                        <span th:text="${#strings.substring(festival.endDate,0,4)}"></span>.
+                        <span th:text="${#strings.substring(festival.endDate,4,6)}"></span>.
+                        <span th:text="${#strings.substring(festival.endDate,6,8)}"></span>
+
+                    </div>
+
+                    <div class="festival-address"
+                         th:text="${festival.address}"></div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="month-section"
+         id="m06">
+
+        <div class="month-title">
+
+            ☀️ 6월 축제
+
+        </div>
+
+        <div class="festival-grid">
+
+            <div class="festival-card"
+                 th:classappend="${festival.finished} ? ' finished' : ''"
+                 th:each="festival : ${festivals}"
+                 th:if="${#strings.substring(festival.startDate,4,6) == '06'}">
+
+                <img th:src="${festival.image}">
+
+                <div class="festival-body">
+
+                    <div class="festival-status"
+                         th:classappend="
+     ${festival.status == '예정'} ? ' status-upcoming' :
+     (${festival.status == '진행중'} ? ' status-ongoing' :
+     ' status-finished')">
+
+                        <span th:text="${festival.status}"></span>
+
+                    </div>
+
+                    <div class="festival-title"
+                         th:text="${festival.title}"></div>
+
+                    <div class="festival-date">
+
+                        📅 행사기간
+
+                        <br>
+
+                        <span th:text="${#strings.substring(festival.startDate,0,4)}"></span>.
+                        <span th:text="${#strings.substring(festival.startDate,4,6)}"></span>.
+                        <span th:text="${#strings.substring(festival.startDate,6,8)}"></span>
+
+                        ~
+
+                        <span th:text="${#strings.substring(festival.endDate,0,4)}"></span>.
+                        <span th:text="${#strings.substring(festival.endDate,4,6)}"></span>.
+                        <span th:text="${#strings.substring(festival.endDate,6,8)}"></span>
+
+                    </div>
+
+                    <div class="festival-address"
+                         th:text="${festival.address}"></div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="month-section"
+         id="m07">
+
+        <div class="month-title">
+
+            🌊 7월 축제
+
+        </div>
+
+        <div class="festival-grid">
+
+            <div class="festival-card"
+                 th:classappend="${festival.finished} ? ' finished' : ''"
+                 th:each="festival : ${festivals}"
+                 th:if="${#strings.substring(festival.startDate,4,6) == '07'}">
+
+                <img th:src="${festival.image}">
+
+                <div class="festival-body">
+
+                    <div class="festival-status"
+                         th:classappend="
+     ${festival.status == '예정'} ? ' status-upcoming' :
+     (${festival.status == '진행중'} ? ' status-ongoing' :
+     ' status-finished')">
+
+                        <span th:text="${festival.status}"></span>
+
+                    </div>
+
+                    <div class="festival-title"
+                         th:text="${festival.title}"></div>
+
+                    <div class="festival-date">
+
+                        📅 행사기간
+
+                        <br>
+
+                        <span th:text="${#strings.substring(festival.startDate,0,4)}"></span>.
+                        <span th:text="${#strings.substring(festival.startDate,4,6)}"></span>.
+                        <span th:text="${#strings.substring(festival.startDate,6,8)}"></span>
+
+                        ~
+
+                        <span th:text="${#strings.substring(festival.endDate,0,4)}"></span>.
+                        <span th:text="${#strings.substring(festival.endDate,4,6)}"></span>.
+                        <span th:text="${#strings.substring(festival.endDate,6,8)}"></span>
+
+                    </div>
+
+                    <div class="festival-address"
+                         th:text="${festival.address}"></div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="month-section"
+         id="m08">
+
+        <div class="month-title">
+
+            🍉 8월 축제
+
+        </div>
+
+        <div class="festival-grid">
+
+            <div class="festival-card"
+                 th:classappend="${festival.finished} ? ' finished' : ''"
+                 th:each="festival : ${festivals}"
+                 th:if="${#strings.substring(festival.startDate,4,6) == '08'}">
+
+                <img th:src="${festival.image}">
+
+                <div class="festival-body">
+
+                    <div class="festival-status"
+                         th:classappend="
+     ${festival.status == '예정'} ? ' status-upcoming' :
+     (${festival.status == '진행중'} ? ' status-ongoing' :
+     ' status-finished')">
+
+                        <span th:text="${festival.status}"></span>
+
+                    </div>
+
+                    <div class="festival-title"
+                         th:text="${festival.title}"></div>
+
+                    <div class="festival-date">
+
+                        📅 행사기간
+
+                        <br>
+
+                        <span th:text="${#strings.substring(festival.startDate,0,4)}"></span>.
+                        <span th:text="${#strings.substring(festival.startDate,4,6)}"></span>.
+                        <span th:text="${#strings.substring(festival.startDate,6,8)}"></span>
+
+                        ~
+
+                        <span th:text="${#strings.substring(festival.endDate,0,4)}"></span>.
+                        <span th:text="${#strings.substring(festival.endDate,4,6)}"></span>.
+                        <span th:text="${#strings.substring(festival.endDate,6,8)}"></span>
+
+                    </div>
+
+                    <div class="festival-address"
+                         th:text="${festival.address}"></div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="month-section"
+         id="m09">
+
+        <div class="month-title">
+
+            🍁 9월 축제
+
+        </div>
+
+        <div class="festival-grid">
+
+            <div class="festival-card"
+                 th:classappend="${festival.finished} ? ' finished' : ''"
+                 th:each="festival : ${festivals}"
+                 th:if="${#strings.substring(festival.startDate,4,6) == '09'}">
+
+                <img th:src="${festival.image}">
+
+                <div class="festival-body">
+
+                    <div class="festival-status"
+                         th:classappend="
+     ${festival.status == '예정'} ? ' status-upcoming' :
+     (${festival.status == '진행중'} ? ' status-ongoing' :
+     ' status-finished')">
+
+                        <span th:text="${festival.status}"></span>
+
+                    </div>
+
+                    <div class="festival-title"
+                         th:text="${festival.title}"></div>
+
+                    <div class="festival-date">
+
+                        📅 행사기간
+
+                        <br>
+
+                        <span th:text="${#strings.substring(festival.startDate,0,4)}"></span>.
+                        <span th:text="${#strings.substring(festival.startDate,4,6)}"></span>.
+                        <span th:text="${#strings.substring(festival.startDate,6,8)}"></span>
+
+                        ~
+
+                        <span th:text="${#strings.substring(festival.endDate,0,4)}"></span>.
+                        <span th:text="${#strings.substring(festival.endDate,4,6)}"></span>.
+                        <span th:text="${#strings.substring(festival.endDate,6,8)}"></span>
+
+                    </div>
+
+                    <div class="festival-address"
+                         th:text="${festival.address}"></div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="month-section"
+         id="m10">
+
+        <div class="month-title">
+
+            🎃 10월 축제
+
+        </div>
+
+        <div class="festival-grid">
+
+            <div class="festival-card"
+                 th:classappend="${festival.finished} ? ' finished' : ''"
+                 th:each="festival : ${festivals}"
+                 th:if="${#strings.substring(festival.startDate,4,6) == '10'}">
+
+                <img th:src="${festival.image}">
+
+                <div class="festival-body">
+
+                    <div class="festival-status"
+                         th:classappend="
+     ${festival.status == '예정'} ? ' status-upcoming' :
+     (${festival.status == '진행중'} ? ' status-ongoing' :
+     ' status-finished')">
+
+                        <span th:text="${festival.status}"></span>
+
+                    </div>
+
+                    <div class="festival-title"
+                         th:text="${festival.title}"></div>
+
+                    <div class="festival-date">
+
+                        📅 행사기간
+
+                        <br>
+
+                        <span th:text="${#strings.substring(festival.startDate,0,4)}"></span>.
+                        <span th:text="${#strings.substring(festival.startDate,4,6)}"></span>.
+                        <span th:text="${#strings.substring(festival.startDate,6,8)}"></span>
+
+                        ~
+
+                        <span th:text="${#strings.substring(festival.endDate,0,4)}"></span>.
+                        <span th:text="${#strings.substring(festival.endDate,4,6)}"></span>.
+                        <span th:text="${#strings.substring(festival.endDate,6,8)}"></span>
+
+                    </div>
+
+                    <div class="festival-address"
+                         th:text="${festival.address}"></div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="month-section"
+         id="m11">
+
+        <div class="month-title">
+
+            🍂 11월 축제
+
+        </div>
+
+        <div class="festival-grid">
+
+            <div class="festival-card"
+                 th:classappend="${festival.finished} ? ' finished' : ''"
+                 th:each="festival : ${festivals}"
+                 th:if="${#strings.substring(festival.startDate,4,6) == '11'}">
+
+                <img th:src="${festival.image}">
+
+                <div class="festival-body">
+
+                    <div class="festival-status"
+                         th:classappend="
+     ${festival.status == '예정'} ? ' status-upcoming' :
+     (${festival.status == '진행중'} ? ' status-ongoing' :
+     ' status-finished')">
+
+                        <span th:text="${festival.status}"></span>
+
+                    </div>
+
+                    <div class="festival-title"
+                         th:text="${festival.title}"></div>
+
+                    <div class="festival-date">
+
+                        📅 행사기간
+
+                        <br>
+
+                        <span th:text="${#strings.substring(festival.startDate,0,4)}"></span>.
+                        <span th:text="${#strings.substring(festival.startDate,4,6)}"></span>.
+                        <span th:text="${#strings.substring(festival.startDate,6,8)}"></span>
+
+                        ~
+
+                        <span th:text="${#strings.substring(festival.endDate,0,4)}"></span>.
+                        <span th:text="${#strings.substring(festival.endDate,4,6)}"></span>.
+                        <span th:text="${#strings.substring(festival.endDate,6,8)}"></span>
+
+                    </div>
+
+                    <div class="festival-address"
+                         th:text="${festival.address}"></div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="month-section"
+         id="m12">
+
+        <div class="month-title">
+
+            🎄 12월 축제
+
+        </div>
+
+        <div class="festival-grid">
+
+            <div class="festival-card"
+                 th:classappend="${festival.finished} ? ' finished' : ''"
+                 th:each="festival : ${festivals}"
+                 th:if="${#strings.substring(festival.startDate,4,6) == '12'}">
+
+                <img th:src="${festival.image}">
+
+                <div class="festival-body">
+
+                    <div class="festival-status"
+                         th:classappend="
+     ${festival.status == '예정'} ? ' status-upcoming' :
+     (${festival.status == '진행중'} ? ' status-ongoing' :
+     ' status-finished')">
+
+                        <span th:text="${festival.status}"></span>
+
+                    </div>
+
+                    <div class="festival-title"
+                         th:text="${festival.title}"></div>
+
+                    <div class="festival-date">
+
+                        📅 행사기간
+
+                        <br>
+
+                        <span th:text="${#strings.substring(festival.startDate,0,4)}"></span>.
+                        <span th:text="${#strings.substring(festival.startDate,4,6)}"></span>.
+                        <span th:text="${#strings.substring(festival.startDate,6,8)}"></span>
+
+                        ~
+
+                        <span th:text="${#strings.substring(festival.endDate,0,4)}"></span>.
+                        <span th:text="${#strings.substring(festival.endDate,4,6)}"></span>.
+                        <span th:text="${#strings.substring(festival.endDate,6,8)}"></span>
+
+                    </div>
+
+                    <div class="festival-address"
+                         th:text="${festival.address}"></div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="modal fade"
+         id="searchModal">
+
+        <div class="modal-dialog">
+
+            <div class="modal-content">
+
+                <div class="modal-header">
+
+                    <h5 class="modal-title">
+
+                        지역 검색
+
+                    </h5>
+
+                    <button
+                            class="btn-close"
+                            data-bs-dismiss="modal">
+                    </button>
+
+                </div>
+
+                <div class="modal-body">
+
+                    <form action="/search"
+                          onsubmit="return validateRegion()">
+
+                        <div class="position-relative">
+
+                            <input
+                                    type="text"
+                                    id="regionInput"
+                                    name="keyword"
+                                    class="form-control"
+                                    placeholder="서울, 부산, 제주 입력">
+
+                            <div id="suggestions"
+                                 class="suggestion-box">
+                            </div>
+
+                        </div>
+
+                        <datalist id="regionList">
+
+                            <option value="서울">
+                            <option value="부산">
+                            <option value="대구">
+                            <option value="인천">
+                            <option value="광주">
+                            <option value="대전">
+                            <option value="울산">
+                            <option value="세종">
+
+                            <option value="경기">
+                            <option value="강원">
+                            <option value="충북">
+                            <option value="충남">
+                            <option value="경북">
+                            <option value="경남">
+                            <option value="전북">
+                            <option value="전남">
+
+                            <option value="제주">
+
+                        </datalist>
+
+                        <script th:inline="javascript">
+
+                            const regions = /*[[${allRegionNames}]]*/ [];
+
+                            document.addEventListener(
+                                "DOMContentLoaded",
+                                function(){
+
+                                    const input =
+                                        document.getElementById(
+                                            "regionInput"
+                                        );
+
+                                    const box =
+                                        document.getElementById(
+                                            "suggestions"
+                                        );
+
+                                    if(!input) return;
+
+                                    input.addEventListener(
+                                        "input",
+                                        function(){
+
+                                            const value =
+                                                this.value.trim();
+
+                                            box.innerHTML = "";
+
+                                            if(value === ""){
+
+                                                box.style.display = "none";
+                                                return;
+                                            }
+
+                                            const matched =
+                                                regions.filter(
+                                                    region =>
+                                                        region.includes(value)
+                                                );
+
+                                            matched.forEach(
+                                                region => {
+
+                                                    const div =
+                                                        document.createElement("div");
+
+                                                    div.className =
+                                                        "suggestion-item";
+
+                                                    div.innerText =
+                                                        region;
+
+                                                    div.onclick =
+                                                        function(){
+
+                                                            input.value =
+                                                                region;
+
+                                                            box.style.display =
+                                                                "none";
+
+                                                        };
+
+                                                    box.appendChild(div);
+
+                                                }
+                                            );
+
+                                            box.style.display =
+                                                matched.length
+                                                    ? "block"
+                                                    : "none";
+
+                                        }
+                                    );
+
+                                });
+
+                        </script>
+
+                        <script th:inline="javascript">
+
+                            function validateRegion(){
+
+                                const keyword =
+                                    document.querySelector(
+                                        'input[name="keyword"]'
+                                    ).value.trim();
+
+                                const regions = /*[[${allRegionNames}]]*/ [];
+
+                                if(!regions.includes(keyword)){
+
+                                    alert(
+                                        "등록되지 않은 지역입니다."
+                                    );
+
+                                    return false;
+                                }
+
+                                return true;
+                            }
+
+                        </script>
+
+                        <button
+                                class="btn btn-primary w-100 mt-3">
+
+                            검색
+
+                        </button>
+
+                    </form>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<script>
+
+    document.addEventListener(
+        "DOMContentLoaded",
+        function(){
+
+            const currentMonth =
+                new Date().getMonth() + 1;
+
+            const monthId =
+                "m" +
+                String(currentMonth)
+                    .padStart(2,"0");
+
+            const targetSection =
+                document.getElementById(
+                    monthId
+                );
+
+            if(targetSection){
+
+                targetSection.classList.add(
+                    "active-month"
+                );
+
+            }
+
+            const buttons =
+                document.querySelectorAll(
+                    ".month-btn"
+                );
+
+            if(
+                buttons[currentMonth - 1]
+            ){
+
+                buttons[currentMonth - 1]
+                    .classList.add(
+                    "active"
+                );
+
+            }
+
+        }
+    );
+
+    function showMonth(monthId, btn){
+
+        document
+            .querySelectorAll(
+                ".month-section"
+            )
+            .forEach(section => {
+
+                section.classList.remove(
+                    "active-month"
+                );
+
+            });
+
+        document
+            .getElementById(monthId)
+            .classList.add(
+            "active-month"
+        );
+
+        document
+            .querySelectorAll(
+                ".month-btn"
+            )
+            .forEach(button => {
+
+                button.classList.remove(
+                    "active"
+                );
+
+            });
+
+        btn.classList.add(
+            "active"
+        );
+
+    }
+
+</script>
+<button
+        id="themeToggle"
+        class="theme-btn">
+
+    🌙
+
+</button>
+<script src="/theme.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+
+</html>

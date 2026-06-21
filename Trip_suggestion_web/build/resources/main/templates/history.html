@@ -1,0 +1,750 @@
+<!DOCTYPE html>
+
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <title>추천 기록</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+          rel="stylesheet">
+
+    <style>
+
+        *{
+            margin:0;
+            padding:0;
+            box-sizing:border-box;
+        }
+
+        body{
+
+            background:
+                    linear-gradient(
+                            180deg,
+                            #eef5ff 0%,
+                            #f8fafc 100%
+                    );
+
+            font-family:
+                    "Pretendard",
+                    "Noto Sans KR",
+                    sans-serif;
+
+            min-height:100vh;
+
+        }
+
+        .history-container{
+
+            max-width:1200px;
+
+            margin:auto;
+
+            padding:40px 20px;
+
+        }
+
+        .navbar-custom{
+
+            background:white;
+
+            border-radius:24px;
+
+            padding:20px 30px;
+
+            margin-bottom:30px;
+
+            box-shadow:
+                    0 10px 30px rgba(0,0,0,.05);
+
+        }
+
+        .logo{
+
+            text-decoration:none;
+
+            font-size:28px;
+
+            font-weight:800;
+
+            color:#2563eb;
+
+        }
+
+        .hero{
+
+            background:
+                    linear-gradient(
+                            135deg,
+                            #2563eb,
+                            #60a5fa
+                    );
+
+            border-radius:30px;
+
+            color:white;
+
+            padding:40px 50px;
+
+            margin-bottom:30px;
+
+        }
+
+        .hero h1{
+
+            font-size:48px;
+
+            font-weight:900;
+
+            margin-bottom:10px;
+
+        }
+
+        .hero p{
+
+            opacity:.9;
+
+            font-size:18px;
+
+        }
+
+        .table-card{
+
+            background:white;
+
+            border-radius:30px;
+
+            padding:30px;
+
+            box-shadow:
+                    0 10px 30px rgba(0,0,0,.05);
+
+        }
+
+        .table{
+
+            margin-bottom:0;
+
+            overflow:hidden;
+
+            border-radius:20px;
+
+        }
+
+        .table thead{
+
+            background:
+                    linear-gradient(
+                            135deg,
+                            #2563eb,
+                            #60a5fa
+                    );
+
+            color:white;
+
+        }
+
+        .table th{
+
+            border:none;
+
+            padding:18px;
+
+            font-weight:700;
+
+        }
+
+        .table td{
+
+            padding:18px;
+
+            vertical-align:middle;
+
+        }
+
+        .table tbody tr{
+
+            transition:.2s;
+
+        }
+
+        .table tbody tr:hover{
+
+            background:#f8fbff;
+
+            transform:scale(1.01);
+
+        }
+
+        .home-btn{
+
+            margin-top:30px;
+
+            width:100%;
+
+            border:none;
+
+            border-radius:18px;
+
+            padding:18px;
+
+            font-size:18px;
+
+            font-weight:700;
+
+            color:white;
+
+            background:
+                    linear-gradient(
+                            135deg,
+                            #2563eb,
+                            #60a5fa
+                    );
+
+            text-decoration:none;
+
+            display:block;
+
+            text-align:center;
+
+        }
+
+        .home-btn:hover{
+
+            color:white;
+
+        }
+
+        .suggestion-box{
+
+            position:absolute;
+
+            top:100%;
+
+            left:0;
+
+            right:0;
+
+            background:white;
+
+            border-radius:12px;
+
+            box-shadow:
+                    0 10px 25px rgba(0,0,0,.08);
+
+            z-index:999;
+
+            display:none;
+
+        }
+
+        .suggestion-item{
+
+            padding:12px 15px;
+
+            cursor:pointer;
+
+        }
+
+        .suggestion-item:hover{
+
+            background:#eff6ff;
+
+        }
+
+        .dark-mode .suggestion-box{
+
+            background:#1e293b;
+
+        }
+
+        .dark-mode .suggestion-item{
+
+            color:white;
+
+        }
+
+        .dark-mode .suggestion-item:hover{
+
+            background:#334155;
+
+        }
+
+        .position-relative{
+
+            width:100%;
+
+        }
+
+    </style>
+    <link rel="stylesheet"
+          href="/theme.css">
+</head>
+
+<body>
+
+<div class="history-container">
+
+    <div class="navbar-custom d-flex justify-content-between align-items-center">
+
+        <a href="/"
+           class="logo">
+
+            ✈️ TripMate AI
+
+        </a>
+
+        <div class="d-flex align-items-center gap-2">
+
+            <button
+                    class="btn btn-light rounded-circle shadow-sm"
+                    data-bs-toggle="modal"
+                    data-bs-target="#searchModal">
+
+                🔍
+
+            </button>
+
+            <a href="/"
+               class="btn btn-primary">
+
+                홈으로 이동
+
+            </a>
+
+        </div>
+
+    </div>
+
+    <div class="hero">
+
+        <h1>
+
+            📚 추천 기록
+
+        </h1>
+
+        <p>
+
+            지금까지 추천받은 여행지를 확인해보세요
+
+        </p>
+
+    </div>
+
+    <div class="table-card">
+
+        <div class="text-end mb-3">
+
+            <form
+                    action="/history/deletePage"
+                    method="post">
+
+                <input
+                        type="hidden"
+                        name="page"
+                        th:value="${currentPage}">
+
+                <button
+                        class="btn btn-danger">
+
+                    🗑 현재 페이지 삭제
+
+                </button>
+
+            </form>
+
+        </div>
+
+        <table class="table text-center align-middle">
+
+            <thead>
+
+            <tr>
+
+                <th>구분</th>
+
+                <th>동행</th>
+
+                <th>예산</th>
+
+                <th>스타일</th>
+
+                <th>추천 지역</th>
+
+                <th>관리</th>
+
+            </tr>
+
+            </thead>
+
+            <tbody>
+
+            <tr th:each="history : ${histories.content}">
+
+                <td th:text="${history.type}"></td>
+
+                <td th:text="${history.companion}"></td>
+
+                <td th:text="${history.budget}"></td>
+
+                <td th:text="${history.style}"></td>
+
+                <td>
+                    📍
+                    <span th:text="${history.destination}"></span>
+                </td>
+
+                <td>
+
+                    <form
+                            action="/history/delete"
+                            method="post">
+
+                        <input
+                                type="hidden"
+                                name="id"
+                                th:value="${history.id}">
+
+                        <button
+                                type="submit"
+                                class="btn btn-sm btn-danger">
+
+                            삭제
+
+                        </button>
+
+                    </form>
+
+                </td>
+
+            </tr>
+
+            </tbody>
+
+        </table>
+
+        <div class="d-flex justify-content-center mt-4">
+
+            <a
+                    th:if="${currentPage > 0}"
+                    th:href="@{/history(page=${currentPage-1})}"
+                    class="btn btn-outline-primary me-2">
+
+                이전
+
+            </a>
+
+            <span class="align-self-center">
+
+        [[${currentPage + 1}]]
+        /
+        [[${totalPages}]]
+
+    </span>
+
+            <a
+                    th:if="${currentPage < totalPages-1}"
+                    th:href="@{/history(page=${currentPage+1})}"
+                    class="btn btn-outline-primary ms-2">
+
+                다음
+
+            </a>
+
+        </div>
+
+        <a href="/"
+           class="home-btn">
+
+            ✈️ 홈으로 돌아가기
+
+        </a>
+
+    </div>
+
+</div>
+<button id="themeToggle"
+        class="theme-btn">
+
+    🌙
+
+</button>
+
+<div class="modal fade"
+     id="searchModal"
+     tabindex="-1">
+
+    <div class="modal-dialog">
+
+        <div class="modal-content">
+
+            <div class="modal-header">
+
+                <h5 class="modal-title">
+
+                    지역 검색
+
+                </h5>
+
+                <button type="button"
+                        class="btn-close"
+                        data-bs-dismiss="modal">
+                </button>
+
+            </div>
+
+            <div class="modal-body">
+
+                <form action="/search"
+                      onsubmit="return validateRegion()">
+
+                    <div class="position-relative">
+
+                        <input
+                                type="text"
+                                id="regionInput"
+                                name="keyword"
+                                class="form-control"
+                                placeholder="서울, 부산, 제주 입력">
+
+                        <div id="suggestions"
+                             class="suggestion-box">
+                        </div>
+
+                    </div>
+
+                    <datalist id="regionList">
+
+                        <option value="서울">
+                        <option value="부산">
+                        <option value="대구">
+                        <option value="인천">
+                        <option value="광주">
+                        <option value="대전">
+                        <option value="울산">
+                        <option value="세종">
+
+                        <option value="경기">
+                        <option value="강원">
+                        <option value="충북">
+                        <option value="충남">
+                        <option value="경북">
+                        <option value="경남">
+                        <option value="전북">
+                        <option value="전남">
+
+                        <option value="제주">
+
+                    </datalist>
+
+                    <script>
+
+                        const regions = [
+
+                            "서울",
+                            "부산",
+                            "대구",
+                            "인천",
+                            "광주",
+                            "대전",
+                            "울산",
+                            "세종",
+
+                            "경기",
+                            "강원",
+
+                            "충북",
+                            "충남",
+
+                            "경북",
+                            "경남",
+
+                            "전북",
+                            "전남",
+
+                            "제주",
+
+                            "강릉",
+                            "속초",
+                            "춘천",
+                            "원주",
+
+                            "경주",
+                            "포항",
+                            "안동",
+
+                            "여수",
+                            "목포",
+                            "순천",
+
+                            "제주시",
+                            "서귀포"
+                        ];
+
+                        document.addEventListener(
+                            "DOMContentLoaded",
+                            function(){
+
+                                const input =
+                                    document.getElementById(
+                                        "regionInput"
+                                    );
+
+                                const box =
+                                    document.getElementById(
+                                        "suggestions"
+                                    );
+
+                                if(!input) return;
+
+                                input.addEventListener(
+                                    "input",
+                                    function(){
+
+                                        const value =
+                                            this.value.trim();
+
+                                        box.innerHTML = "";
+
+                                        if(value === ""){
+
+                                            box.style.display = "none";
+                                            return;
+                                        }
+
+                                        const matched =
+                                            regions.filter(
+                                                region =>
+                                                    region.includes(value)
+                                            );
+
+                                        matched.forEach(
+                                            region => {
+
+                                                const div =
+                                                    document.createElement("div");
+
+                                                div.className =
+                                                    "suggestion-item";
+
+                                                div.innerText =
+                                                    region;
+
+                                                div.onclick =
+                                                    function(){
+
+                                                        input.value =
+                                                            region;
+
+                                                        box.style.display =
+                                                            "none";
+
+                                                    };
+
+                                                box.appendChild(div);
+
+                                            }
+                                        );
+
+                                        box.style.display =
+                                            matched.length
+                                                ? "block"
+                                                : "none";
+
+                                    }
+                                );
+
+                            });
+
+                    </script>
+
+                    <script>
+
+                        function validateRegion(){
+
+                            const keyword =
+                                document.querySelector(
+                                    'input[name="keyword"]'
+                                ).value.trim();
+
+                            const regions = [
+
+                                "서울",
+                                "부산",
+                                "대구",
+                                "인천",
+                                "광주",
+                                "대전",
+                                "울산",
+                                "세종",
+
+                                "경기",
+                                "강원",
+                                "충북",
+                                "충남",
+                                "경북",
+                                "경남",
+                                "전북",
+                                "전남",
+
+                                "제주",
+
+                                "강릉",
+                                "속초",
+                                "춘천",
+                                "원주",
+
+                                "경주",
+                                "포항",
+                                "안동",
+
+                                "여수",
+                                "목포",
+                                "순천",
+
+                                "제주시",
+                                "서귀포"
+                            ];
+
+                            if(!regions.includes(keyword)){
+
+                                alert(
+                                    "등록되지 않은 지역입니다."
+                                );
+
+                                return false;
+                            }
+
+                            return true;
+                        }
+
+                    </script>
+
+                    <button
+                            type="submit"
+                            class="btn btn-primary w-100 mt-3">
+
+                        검색
+
+                    </button>
+
+                </form>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+<script src="/theme.js"></script>
+</body>
+
+</html>

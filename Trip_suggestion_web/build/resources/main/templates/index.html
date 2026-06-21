@@ -1,0 +1,1143 @@
+<!DOCTYPE html>
+
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <title>TripMate AI</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+          rel="stylesheet">
+
+    <link rel="stylesheet"
+          href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
+    <style>
+
+        *{
+            margin:0;
+            padding:0;
+            box-sizing:border-box;
+        }
+
+        body{
+
+            background:
+                    linear-gradient(
+                            180deg,
+                            #eef5ff 0%,
+                            #f8fafc 100%
+                    );
+
+            font-family:
+                    "Pretendard",
+                    "Noto Sans KR",
+                    sans-serif;
+
+            color:#111827;
+
+        }
+
+        .navbar-custom{
+
+            background:white;
+
+            border-radius:24px;
+
+            padding:18px 30px;
+
+            margin-top:20px;
+
+            margin-bottom:25px;
+
+            box-shadow:
+                    0 8px 25px rgba(0,0,0,.05);
+
+        }
+
+        .logo{
+
+            text-decoration:none;
+
+            font-size:28px;
+
+            font-weight:800;
+
+            color:#2563eb;
+
+        }
+
+        .hero{
+
+            background:
+                    linear-gradient(
+                            rgba(37,99,235,.75),
+                            rgba(96,165,250,.75)
+                    ),
+                    url("https://images.unsplash.com/photo-1507525428034-b723cf961d3e");
+
+            background-size:cover;
+
+            background-position:center;
+
+            color:white;
+
+            border-radius:32px;
+
+            padding:35px 50px;
+
+            margin-bottom:30px;
+
+        }
+
+        .hero-badge{
+
+            display:inline-block;
+
+            padding:10px 18px;
+
+            border-radius:999px;
+
+            background:
+                    rgba(255,255,255,.2);
+
+            margin-bottom:20px;
+
+        }
+
+        .hero h1{
+
+            font-size:42px;
+
+            font-weight:900;
+
+            margin-bottom:15px;
+
+        }
+
+        .hero p{
+
+            font-size:17px;
+
+            opacity:.9;
+
+        }
+
+        .section-card{
+
+            background:white;
+
+            border-radius:28px;
+
+            padding:30px;
+
+            margin-bottom:30px;
+
+            box-shadow:
+                    0 15px 40px rgba(0,0,0,.08);
+
+        }
+
+        .section-title{
+
+            font-size:24px;
+
+            font-weight:800;
+
+            margin-bottom:20px;
+
+        }
+
+        .option-grid{
+
+            display:grid;
+
+            grid-template-columns:
+            repeat(4,1fr);
+
+            gap:15px;
+
+        }
+
+        .option-card{
+
+            background:#f8fafc;
+
+            border:2px solid transparent;
+
+            border-radius:20px;
+
+            padding:20px;
+
+            text-align:center;
+
+            cursor:pointer;
+
+            transition:.25s;
+
+            font-weight:600;
+
+        }
+
+        .option-card:hover{
+
+            border-color:#2563eb;
+
+            transform:
+                    translateY(-4px);
+
+        }
+
+        .option-card input{
+
+            display:none;
+
+        }
+
+        .option-card:has(input:checked){
+
+            background:#eff6ff;
+
+            border:2px solid #2563eb;
+
+        }
+
+        .option-card input:checked + span{
+
+            color:#2563eb;
+
+            font-weight:800;
+
+        }
+
+        .form-select{
+
+            border-radius:16px;
+
+            border:2px solid #e5e7eb;
+
+            padding:14px;
+
+        }
+
+        .festival-grid{
+
+            display:grid;
+
+            grid-template-columns:
+            repeat(3,1fr);
+
+            gap:18px;
+
+        }
+
+        .festival-card{
+
+            background:white;
+
+            border-radius:20px;
+
+            overflow:hidden;
+
+            box-shadow:
+                    0 10px 20px rgba(0,0,0,.08);
+
+        }
+
+        .festival-img{
+
+            width:100%;
+
+            height:150px;
+
+            object-fit:cover;
+
+        }
+
+        .festival-body{
+
+            padding:12px;
+
+        }
+
+        .recommend-btn{
+
+            width:100%;
+
+            height:70px;
+
+            margin-top:30px;
+
+            border:none;
+
+            border-radius:20px;
+
+            font-size:24px;
+
+            font-weight:800;
+
+            color:white;
+
+            background:
+                    linear-gradient(
+                            135deg,
+                            #2563eb,
+                            #60a5fa
+                    );
+
+        }
+
+        .recommend-btn:hover{
+
+            transform:
+                    translateY(-3px);
+
+        }
+
+        @media(max-width:992px){
+
+            .option-grid{
+
+                grid-template-columns:
+                repeat(2,1fr);
+
+            }
+
+        }
+
+        @media(max-width:768px){
+
+            .option-grid{
+
+                grid-template-columns:1fr;
+
+            }
+
+            .hero{
+
+                padding:35px;
+
+            }
+
+            .hero h1{
+
+                font-size:36px;
+
+            }
+
+        }
+
+        .festival-date{
+
+            margin-top:12px;
+
+            padding:10px;
+
+            background:#eff6ff;
+
+            border-radius:12px;
+
+            color:#2563eb;
+
+            font-size:15px;
+
+            font-weight:700;
+
+        }
+
+        .festival-more-wrap{
+
+            text-align:center;
+
+            margin-top:35px;
+
+            margin-bottom:20px;
+
+        }
+
+        .festival-more-btn{
+
+            display:inline-block;
+
+            padding:14px 35px;
+
+            border-radius:18px;
+
+            text-decoration:none;
+
+            color:white;
+
+            font-size:17px;
+
+            font-weight:700;
+
+            background:
+                    linear-gradient(
+                            135deg,
+                            #2563eb,
+                            #60a5fa
+                    );
+
+            box-shadow:
+                    0 10px 25px rgba(37,99,235,.25);
+
+            transition:.2s;
+
+        }
+
+        .festival-more-btn:hover{
+
+            transform:translateY(-3px);
+
+            color:white;
+
+        }
+
+        .search-input{
+
+            background:#ffffff !important;
+
+            color:#111827 !important;
+
+            border:2px solid #dbeafe;
+
+        }
+
+        .search-input::placeholder{
+
+            color:#64748b !important;
+
+        }
+
+        .modal-dialog{
+
+            max-width:500px;
+
+            margin-top:120px;
+
+        }
+
+        .modal-content{
+
+            border:none;
+
+            border-radius:24px;
+
+            padding:30px;
+
+            box-shadow:
+                    0 20px 50px rgba(0,0,0,.15);
+
+        }
+
+        .search-btn{
+
+            width:48px;
+
+            height:48px;
+
+            border:none;
+
+            border-radius:50%;
+
+            background:#eff6ff;
+
+            color:#2563eb;
+
+            font-size:20px;
+
+            transition:.2s;
+
+        }
+
+        .search-btn:hover{
+
+            background:#dbeafe;
+
+            transform:scale(1.05);
+
+        }
+
+        .suggestion-box{
+
+            position:absolute;
+
+            top:100%;
+            left:0;
+            right:0;
+
+            background:white;
+
+            border-radius:12px;
+
+            box-shadow:
+                    0 10px 25px rgba(0,0,0,.08);
+
+            z-index:99999;
+
+            display:none;
+        }
+
+        .suggestion-item{
+
+            padding:12px 15px;
+
+            cursor:pointer;
+
+        }
+
+        .suggestion-item:hover{
+
+            background:#eff6ff;
+
+        }
+
+        .dark-mode .suggestion-box{
+
+            background:#1e293b;
+
+        }
+
+        .dark-mode .suggestion-item{
+
+            color:white;
+
+        }
+
+        .dark-mode .suggestion-item:hover{
+
+            background:#334155;
+
+        }
+
+        .position-relative{
+
+            width:100%;
+
+        }
+
+    </style>
+    <link rel="stylesheet"
+          href="/theme.css">
+</head>
+<body>
+
+<div class="container py-4">
+
+    <div class="navbar-custom
+            d-flex
+            justify-content-between
+            align-items-center">
+
+        <a href="/"
+           class="logo">
+
+            ✈️ TripMate AI
+
+        </a>
+
+        <div class="d-flex align-items-center gap-3">
+
+            <button
+                    class="search-btn"
+                    data-bs-toggle="modal"
+                    data-bs-target="#searchModal">
+
+                <i class="bi bi-search"></i>
+
+            </button>
+
+            <div class="d-flex align-items-center gap-2">
+
+                <div th:if="${loginUser == null}">
+
+                    <a href="/login"
+                       class="btn btn-outline-primary">
+
+                        로그인
+
+                    </a>
+
+                    <a href="/signup"
+                       class="btn btn-primary">
+
+                        회원가입
+
+                    </a>
+
+                </div>
+
+                <div th:if="${loginUser != null}"
+                     class="d-flex align-items-center gap-2">
+
+            <span class="fw-bold text-primary">
+
+                👋 <span th:text="${loginUser.name}"></span>님
+
+            </span>
+
+                    <a href="/history"
+                       class="btn btn-outline-primary">
+
+                        추천 기록
+
+                    </a>
+
+                    <a href="/logout"
+                       class="btn btn-primary">
+
+                        로그아웃
+
+                    </a>
+
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+
+    <div class="hero">
+
+        <div class="hero-badge">
+
+            AI 여행 추천 서비스
+
+        </div>
+
+        <h1>
+
+            국내 여행 어디로 갈까?
+
+        </h1>
+
+        <p>
+
+            여행 스타일을 분석하여
+            가장 어울리는 여행지를 추천합니다.
+
+        </p>
+
+    </div>
+
+    <div class="section-card mt-4">
+
+        <h3 class="section-title">
+
+            🎉 <span th:text="${currentMonth}"></span>월 추천 축제 TOP 6
+
+        </h3>
+
+        <div th:if="${#lists.isEmpty(festivals)}"
+             class="text-center py-5">
+
+            <h4>
+                현재 진행 예정인
+                <span th:text="${currentMonth}"></span>월
+                축제가 없습니다.
+            </h4>
+
+        </div>
+
+        <div class="festival-grid">
+
+            <div class="festival-card"
+                 th:each="festival : ${festivals}">
+
+                <img th:src="${festival.image}"
+                     class="festival-img">
+
+                <div class="festival-body">
+
+                    <h5 th:text="${festival.title}"></h5>
+
+                    <p th:text="${festival.address}"></p>
+
+                    <p class="festival-date">
+
+                        📅
+                        <span th:text="${#strings.substring(festival.startDate,0,4)}"></span>.
+                        <span th:text="${#strings.substring(festival.startDate,4,6)}"></span>.
+                        <span th:text="${#strings.substring(festival.startDate,6,8)}"></span>
+
+                        ~
+
+                        <span th:text="${#strings.substring(festival.endDate,0,4)}"></span>.
+                        <span th:text="${#strings.substring(festival.endDate,4,6)}"></span>.
+                        <span th:text="${#strings.substring(festival.endDate,6,8)}"></span>
+
+                    </p>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="festival-more-wrap">
+
+            <a href="/festivals"
+               class="festival-more-btn">
+
+                🎉 축제 더보기
+
+            </a>
+
+        </div>
+
+    </div>
+
+    <form action="/recommend"
+          method="post">
+
+        <div class="section-card">
+
+            <h3 class="section-title">
+
+                👨‍👩‍👧 누구와 여행하시나요?
+
+            </h3>
+
+            <div class="option-grid">
+
+                <label class="option-card">
+
+                    <input type="radio"
+                           name="companion"
+                           value="혼자"
+                           required>
+
+                    <span>🙋 혼자</span>
+
+                </label>
+
+                <label class="option-card">
+
+                    <input type="radio"
+                           name="companion"
+                           value="커플">
+
+                    <span>💑 커플</span>
+
+                </label>
+
+                <label class="option-card">
+
+                    <input type="radio"
+                           name="companion"
+                           value="친구">
+
+                    <span>🧑‍🤝‍🧑 친구</span>
+
+                </label>
+
+                <label class="option-card">
+
+                    <input type="radio"
+                           name="companion"
+                           value="가족">
+
+                    <span>👨‍👩‍👧 가족</span>
+
+                </label>
+
+            </div>
+
+        </div>
+        <div class="section-card mt-4">
+
+            <h3 class="section-title">
+
+                💰 예산
+
+            </h3>
+
+            <select name="budget"
+                    class="form-select form-select-lg">
+
+                <option value="10만원 이하">
+
+                    10만원 이하
+
+                </option>
+
+                <option value="10~30만원">
+
+                    10~30만원
+
+                </option>
+
+                <option value="30만원 이상">
+
+                    30만원 이상
+
+                </option>
+
+            </select>
+
+        </div>
+
+        <div class="section-card mt-4">
+
+            <h3 class="section-title">
+
+                🌟 여행 스타일
+
+            </h3>
+
+            <div class="option-grid">
+
+                <label class="option-card">
+
+                    <input type="checkbox"
+                           name="style"
+                           value="자연">
+
+                    <span>🌲 자연</span>
+
+                </label>
+
+                <label class="option-card">
+
+                    <input type="checkbox"
+                           name="style"
+                           value="맛집">
+
+                    <span>🍜 맛집</span>
+
+                </label>
+
+                <label class="option-card">
+
+                    <input type="checkbox"
+                           name="style"
+                           value="축제">
+
+                    <span>🎉 축제</span>
+
+                </label>
+
+                <label class="option-card">
+
+                    <input type="checkbox"
+                           name="style"
+                           value="액티비티">
+
+                    <span>🏄 액티비티</span>
+
+                </label>
+
+            </div>
+
+        </div>
+
+        <div class="section-card mt-4">
+
+            <h3 class="section-title">
+
+                🍀 여행 계절
+
+            </h3>
+
+            <div class="option-grid">
+
+                <label class="option-card">
+
+                    <input type="radio"
+                           name="season"
+                           value="봄"
+                           required>
+
+                    <span>🌸 봄</span>
+
+                </label>
+
+                <label class="option-card">
+
+                    <input type="radio"
+                           name="season"
+                           value="여름">
+
+                    <span>🏖️ 여름</span>
+
+                </label>
+
+                <label class="option-card">
+
+                    <input type="radio"
+                           name="season"
+                           value="가을">
+
+                    <span>🍁 가을</span>
+
+                </label>
+
+                <label class="option-card">
+
+                    <input type="radio"
+                           name="season"
+                           value="겨울">
+
+                    <span>❄️ 겨울</span>
+
+                </label>
+
+            </div>
+
+        </div>
+
+        <button type="submit"
+                id="recommendBtn"
+                class="recommend-btn">
+
+            여행 추천받기 ✈️
+
+        </button>
+
+    </form>
+
+</div>
+
+<script th:if="${loginRequired}">
+
+    alert("로그인이 필요한 서비스입니다.");
+
+    location.href="/login";
+
+</script>
+
+<script>
+
+    document.getElementById(
+        "recommendBtn"
+    ).addEventListener(
+        "click",
+        function(e){
+
+            const companion =
+                document.querySelector(
+                    'input[name="companion"]:checked'
+                );
+
+            const styles =
+                document.querySelectorAll(
+                    'input[name="style"]:checked'
+                );
+
+            if(!companion){
+
+                alert(
+                    "동행을 선택해주세요."
+                );
+
+                e.preventDefault();
+
+                return;
+            }
+
+            if(styles.length === 0){
+
+                alert(
+                    "여행 스타일을 최소 1개 선택해주세요."
+                );
+
+                e.preventDefault();
+
+            }
+
+        }
+    );
+
+</script>
+
+<button id="themeToggle"
+        class="theme-btn">
+
+    🌙
+
+</button>
+
+<script src="/theme.js"></script>
+
+<div class="modal fade"
+     id="searchModal">
+
+    <div class="modal-dialog">
+
+        <div class="modal-content">
+
+            <div class="modal-header">
+
+                <h5>지역 검색</h5>
+
+            </div>
+
+            <div class="modal-body">
+
+                <form action="/search"
+                      onsubmit="return validateRegion()">
+
+                    <div class="position-relative">
+
+                        <input
+                                type="text"
+                                id="regionInput"
+                                name="keyword"
+                                class="form-control"
+                                placeholder="서울, 부산, 제주 입력">
+
+                        <div id="suggestions"
+                             class="suggestion-box">
+                        </div>
+
+                    </div>
+
+                    <datalist id="regionList">
+
+                        <option value="서울">
+                        <option value="부산">
+                        <option value="대구">
+                        <option value="인천">
+                        <option value="광주">
+                        <option value="대전">
+                        <option value="울산">
+                        <option value="세종">
+
+                        <option value="경기">
+                        <option value="강원">
+                        <option value="충북">
+                        <option value="충남">
+                        <option value="경북">
+                        <option value="경남">
+                        <option value="전북">
+                        <option value="전남">
+
+                        <option value="제주">
+
+                    </datalist>
+
+                    <script th:inline="javascript">
+
+                        // DB에 적재된 226개(+제주시/서귀포시/세종) 지역명 전체를 서버에서 그대로 받아온다.
+                        const regions = /*[[${allRegionNames}]]*/ [];
+
+                        document.addEventListener(
+                            "DOMContentLoaded",
+                            function(){
+
+                                const input =
+                                    document.getElementById(
+                                        "regionInput"
+                                    );
+
+                                const box =
+                                    document.getElementById(
+                                        "suggestions"
+                                    );
+
+                                if(!input) return;
+
+                                input.addEventListener(
+                                    "input",
+                                    function(){
+
+                                        const value =
+                                            this.value.trim();
+
+                                        box.innerHTML = "";
+
+                                        if(value === ""){
+
+                                            box.style.display = "none";
+                                            return;
+                                        }
+
+                                        const matched =
+                                            regions.filter(
+                                                region =>
+                                                    region.includes(value)
+                                            );
+
+                                        matched.forEach(
+                                            region => {
+
+                                                const div =
+                                                    document.createElement("div");
+
+                                                div.className =
+                                                    "suggestion-item";
+
+                                                div.innerText =
+                                                    region;
+
+                                                div.onclick =
+                                                    function(){
+
+                                                        input.value =
+                                                            region;
+
+                                                        box.style.display =
+                                                            "none";
+
+                                                    };
+
+                                                box.appendChild(div);
+
+                                            }
+                                        );
+
+                                        box.style.display =
+                                            matched.length
+                                                ? "block"
+                                                : "none";
+
+                                    }
+                                );
+
+                            });
+
+                    </script>
+
+                    <script>
+
+                        function validateRegion(){
+
+                            const keyword =
+                                document.querySelector(
+                                    'input[name="keyword"]'
+                                ).value.trim();
+
+                            if(!regions.includes(keyword)){
+
+                                alert(
+                                    "등록되지 않은 지역입니다."
+                                );
+
+                                return false;
+                            }
+
+                            return true;
+                        }
+
+                    </script>
+
+                    <button
+                            class="btn btn-primary mt-3 w-100">
+
+                        검색
+
+                    </button>
+
+                </form>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>

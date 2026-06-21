@@ -1,0 +1,1276 @@
+<!DOCTYPE html>
+
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0">
+
+  <title>TripMate AI</title>
+
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+        rel="stylesheet">
+
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css"
+        rel="stylesheet">
+
+  <link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/index.global.min.css"
+        rel="stylesheet">
+
+  <style>
+
+    *{
+
+      margin:0;
+      padding:0;
+      box-sizing:border-box;
+
+    }
+
+    :root{
+
+      --primary:#2563eb;
+      --secondary:#60a5fa;
+      --dark:#0f172a;
+      --gray:#64748b;
+      --light:#f8fafc;
+      --card:#ffffff;
+
+    }
+
+    body{
+
+      background:
+              linear-gradient(
+                      180deg,
+                      #eef5ff 0%,
+                      #f8fafc 100%
+              );
+
+      font-family:
+              "Pretendard",
+              "Noto Sans KR",
+              sans-serif;
+
+      color:#111827;
+
+    }
+
+    .navbar-custom{
+
+      background:white;
+
+      border-radius:24px;
+
+      padding:18px 30px;
+
+      margin-top:20px;
+
+      box-shadow:
+              0 8px 25px rgba(0,0,0,.05);
+
+    }
+
+    .logo{
+
+      font-size:26px;
+
+      font-weight:800;
+
+      color:var(--primary);
+
+      text-decoration:none;
+
+    }
+
+    .theme-btn{
+
+      width:50px;
+
+      height:50px;
+
+      border:none;
+
+      border-radius:50%;
+
+      background:#eff6ff;
+
+    }
+
+    .hero{
+
+      margin-top:25px;
+
+      border-radius:36px;
+
+      overflow:hidden;
+
+      background:
+              linear-gradient(
+                      135deg,
+                      #2563eb,
+                      #60a5fa
+              );
+
+      color:white;
+
+      padding:60px;
+
+      position:relative;
+
+    }
+
+    .hero::after{
+
+      content:"";
+
+      position:absolute;
+
+      width:350px;
+
+      height:350px;
+
+      right:-100px;
+
+      top:-100px;
+
+      border-radius:50%;
+
+      background:
+              rgba(255,255,255,.15);
+
+    }
+
+    .hero h1{
+
+      font-size:68px;
+
+      font-weight:900;
+
+      margin-bottom:10px;
+
+    }
+
+    .hero p{
+
+      font-size:20px;
+
+      opacity:.9;
+
+    }
+
+    .hero-badge{
+
+      display:inline-block;
+
+      padding:10px 18px;
+
+      border-radius:999px;
+
+      background:
+              rgba(255,255,255,.15);
+
+      backdrop-filter:blur(10px);
+
+      margin-bottom:20px;
+
+    }
+
+    .section-card{
+
+      background:white;
+
+      border:none;
+
+      border-radius:30px;
+
+      padding:30px;
+
+      margin-top:30px;
+
+      box-shadow:
+              0 10px 30px rgba(0,0,0,.05);
+
+    }
+
+    .section-title{
+
+      display:flex;
+
+      align-items:center;
+
+      gap:10px;
+
+      font-size:28px;
+
+      font-weight:800;
+
+      margin-bottom:25px;
+
+    }
+
+    #calendar{
+
+      background:white;
+
+      border-radius:24px;
+
+      padding:10px;
+
+    }
+
+    .fc{
+
+      font-family:
+              inherit;
+
+    }
+
+    .fc-toolbar-title{
+
+      font-size:24px !important;
+
+      font-weight:700;
+
+    }
+
+    .fc-button{
+
+      background:#2563eb !important;
+
+      border:none !important;
+
+      border-radius:12px !important;
+
+    }
+
+    .tour-card{
+
+      background:white;
+
+      border-radius:24px;
+
+      overflow:hidden;
+
+      box-shadow:
+              0 10px 30px rgba(0,0,0,.05);
+
+      transition:.25s;
+
+      height:100%;
+
+    }
+
+    .tour-card:hover{
+
+      transform:
+              translateY(-8px);
+
+    }
+
+    .tour-image{
+
+      width:100%;
+
+      height:220px;
+
+      object-fit:cover;
+
+    }
+
+    .tour-content{
+
+      padding:20px;
+
+    }
+
+    .tour-title{
+
+      font-size:20px;
+
+      font-weight:700;
+
+      margin-bottom:10px;
+
+    }
+
+    .tour-address{
+
+      color:#64748b;
+
+      margin:0;
+
+    }
+
+    .news-card{
+
+      background:#f8fafc;
+
+      border-radius:18px;
+
+      padding:20px;
+
+      margin-bottom:15px;
+
+      transition:.25s;
+
+    }
+
+    .news-card:hover{
+
+      background:#eff6ff;
+
+    }
+
+    .news-card a{
+
+      text-decoration:none;
+
+      color:#111827;
+
+      font-weight:600;
+
+      font-size:16px;
+
+    }
+
+    .modal-content{
+
+      border:none;
+
+      border-radius:24px;
+
+    }
+
+    .fc-daygrid-day{
+
+      transition:.2s;
+
+    }
+
+    .fc-daygrid-day:hover{
+
+      background:#eff6ff;
+
+      cursor:pointer;
+
+    }
+
+    .fc-day-other{
+
+      opacity:.35;
+
+    }
+
+    .dark-mode{
+
+      background:
+              linear-gradient(
+                      180deg,
+                      #020617,
+                      #0f172a
+              ) !important;
+
+      color:white !important;
+
+    }
+
+    .dark-mode .navbar-custom{
+
+      background:#111827;
+
+    }
+
+    .dark-mode .logo{
+
+      color:white;
+
+    }
+
+    .dark-mode .info-card{
+
+      background:#111827;
+
+      color:white;
+
+    }
+
+    .dark-mode .section-card{
+
+      background:#111827;
+
+      color:white;
+
+    }
+
+    .dark-mode .tour-card{
+
+      background:#1e293b;
+
+    }
+
+    .dark-mode .tour-title{
+
+      color:white;
+
+    }
+
+    .dark-mode .tour-address{
+
+      color:#cbd5e1;
+
+    }
+
+    .dark-mode .news-card{
+
+      background:#1e293b;
+
+    }
+
+    .dark-mode .news-card a{
+
+      color:white;
+
+    }
+
+    .dark-mode #calendar{
+
+      background:#111827;
+
+    }
+
+    .dark-mode .fc{
+
+      color:white !important;
+
+    }
+
+    .dark-mode .modal-content{
+
+      background:#111827;
+
+      color:white;
+
+    }
+
+    @media(max-width:992px){
+
+      .hero{
+
+        padding:40px;
+
+      }
+
+      .hero h1{
+
+        font-size:48px;
+
+      }
+
+    }
+
+    @media(max-width:768px){
+
+      .hero{
+
+        padding:30px;
+
+        text-align:center;
+
+      }
+
+      .hero h1{
+
+        font-size:36px;
+
+      }
+
+      .info-card{
+
+        padding:20px;
+
+      }
+
+      .section-title{
+
+        font-size:22px;
+
+      }
+
+    }
+
+    .icon-btn{
+
+      width:48px;
+
+      height:48px;
+
+      border:none;
+
+      border-radius:50%;
+
+      background:#eff6ff;
+
+      color:#2563eb;
+
+      font-size:20px;
+
+      display:flex;
+
+      align-items:center;
+
+      justify-content:center;
+
+      transition:.2s;
+
+    }
+
+    .icon-btn:hover{
+
+      background:#dbeafe;
+
+      transform:scale(1.05);
+
+    }
+
+    .theme-btn{
+
+      position:fixed;
+
+      right:30px;
+
+      bottom:30px;
+
+      width:60px;
+
+      height:60px;
+
+      border:none;
+
+      border-radius:50%;
+
+      background:#2563eb;
+
+      color:white;
+
+      font-size:24px;
+
+      cursor:pointer;
+
+      z-index:9999;
+
+    }
+
+    .search-region-card{
+
+      margin-top:25px;
+
+      background:white;
+
+      border-radius:20px;
+
+      padding:20px 25px;
+
+      display:flex;
+
+      align-items:center;
+
+      gap:15px;
+
+      box-shadow:
+              0 8px 25px rgba(0,0,0,.05);
+
+    }
+
+    .search-region-icon{
+
+      width:50px;
+
+      height:50px;
+
+      border-radius:50%;
+
+      background:#eff6ff;
+
+      color:#2563eb;
+
+      display:flex;
+
+      align-items:center;
+
+      justify-content:center;
+
+      font-size:22px;
+
+    }
+
+    .search-region-label{
+
+      color:#64748b;
+
+      font-size:14px;
+
+    }
+
+    .search-region-name{
+
+      font-size:24px;
+
+      font-weight:800;
+
+      color:#2563eb;
+
+    }
+
+    .suggestion-box{
+
+      position:absolute;
+
+      top:100%;
+
+      left:0;
+
+      right:0;
+
+      background:white;
+
+      border-radius:12px;
+
+      box-shadow:
+              0 10px 25px rgba(0,0,0,.08);
+
+      z-index:999;
+
+      display:none;
+
+    }
+
+    .suggestion-item{
+
+      padding:12px 15px;
+
+      cursor:pointer;
+
+    }
+
+    .suggestion-item:hover{
+
+      background:#eff6ff;
+
+    }
+
+    .dark-mode .suggestion-box{
+
+      background:#1e293b;
+
+    }
+
+    .dark-mode .suggestion-item{
+
+      color:white;
+
+    }
+
+    .dark-mode .suggestion-item:hover{
+
+      background:#334155;
+
+    }
+
+    .position-relative{
+
+      width:100%;
+
+    }
+
+  </style>
+
+</head>
+
+<body>
+
+<div class="container">
+
+  <div class="navbar-custom d-flex justify-content-between align-items-center">
+
+    <a href="/"
+       class="logo">
+
+      ✈️ TripMate AI
+
+    </a>
+
+    <div class="d-flex align-items-center gap-2">
+
+      <button
+              class="icon-btn"
+              data-bs-toggle="modal"
+              data-bs-target="#searchModal">
+
+        <i class="bi bi-search"></i>
+
+      </button>
+
+      <a href="/"
+         class="btn btn-primary">
+
+        홈 화면으로 이동
+
+      </a>
+
+    </div>
+
+  </div>
+
+  <div class="hero">
+
+    <div class="hero-badge">
+
+      지역 여행 정보
+
+    </div>
+
+    <h1>
+      <span th:text="${region}"></span>
+      여행 가이드
+    </h1>
+
+    <p>
+      <span th:text="${region}"></span> 지역의
+      관광지 · 날씨 · 여행 후기를
+      한 번에 확인해보세요.
+    </p>
+
+  </div>
+
+  <div
+          th:if="${error}"
+          class="alert alert-danger mt-4">
+
+    <span th:text="${error}"></span>
+
+  </div>
+
+  <div class="search-region-card">
+
+    <div class="search-region-icon">
+      <i class="bi bi-geo-alt-fill"></i>
+    </div>
+
+    <div>
+
+      <div class="search-region-label">
+        현재 검색 지역
+      </div>
+
+      <div class="search-region-name"
+           th:text="${region}">
+      </div>
+
+    </div>
+
+  </div>
+
+  <div class="section-card">
+
+    <h2 class="section-title">
+
+      ☁️ 여행 날씨 캘린더
+
+    </h2>
+
+    <div id="calendar"></div>
+
+  </div>
+
+  <div class="section-card">
+
+    <h2 class="section-title">
+
+      📍 추천 관광지
+
+    </h2>
+
+    <div class="row g-4">
+
+      <div class="col-lg-4 col-md-6"
+           th:each="tour : ${tours}">
+
+        <div class="tour-card">
+
+          <img th:src="${tour.image}"
+               class="tour-image"
+               alt="tour">
+
+          <div class="tour-content">
+
+            <h5 class="tour-title"
+                th:text="${tour.title}">
+
+            </h5>
+
+            <p class="tour-address"
+               th:text="${tour.address}">
+
+            </p>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+  <div class="section-card">
+
+    <h2 class="section-title">
+
+      📝 실제 여행 후기
+
+    </h2>
+
+    <div class="news-list">
+
+      <div class="news-card"
+           th:each="item : ${news}">
+
+        <a th:href="${item.link}"
+           target="_blank"
+           th:text="${item.title}">
+
+        </a>
+
+      </div>
+
+    </div>
+
+  </div>
+
+  <div class="text-center my-5">
+
+    <a href="/history"
+       class="btn btn-primary btn-lg px-5">
+
+      추천 기록 보기
+
+    </a>
+
+    <a href="/festivals"
+       class="btn btn-outline-primary btn-lg px-5 ms-2">
+
+      축제 캘린더
+
+    </a>
+
+  </div>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/index.global.min.js"></script>
+
+<script src="/calendar.js"></script>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+<div class="modal fade"
+     id="weatherModal"
+     tabindex="-1">
+
+  <div class="modal-dialog modal-dialog-centered">
+
+    <div class="modal-content">
+
+      <div class="modal-header border-0">
+
+        <h5 class="modal-title">
+
+          📅 날씨 정보
+
+        </h5>
+
+        <button type="button"
+                class="btn-close"
+                data-bs-dismiss="modal">
+
+        </button>
+
+      </div>
+
+      <div class="modal-body"
+           id="modalContent">
+
+      </div>
+
+    </div>
+
+  </div>
+
+</div>
+
+<style>
+
+  .dark-mode .logo{
+
+    color:white;
+
+  }
+
+  .dark-mode .info-card{
+
+    background:#111827;
+
+    color:white;
+
+  }
+
+  .dark-mode .section-card{
+
+    background:#111827;
+
+    color:white;
+
+  }
+
+  .dark-mode .tour-card{
+
+    background:#1e293b;
+
+  }
+
+  .dark-mode .tour-title{
+
+    color:white;
+
+  }
+
+  .dark-mode .tour-address{
+
+    color:#cbd5e1;
+
+  }
+
+  .dark-mode .news-card{
+
+    background:#1e293b;
+
+  }
+
+  .dark-mode .news-card a{
+
+    color:white;
+
+  }
+
+  .dark-mode #calendar{
+
+    background:#111827;
+
+  }
+
+  .dark-mode .fc{
+
+    color:white !important;
+
+  }
+
+  .dark-mode .search-input{
+
+    background:#1e293b;
+
+    color:white;
+
+    border:1px solid #475569;
+
+  }
+
+  .dark-mode .search-input::placeholder{
+
+    color:#cbd5e1;
+
+  }
+
+  .dark-mode .suggestion-box{
+
+    background:#1e293b;
+
+  }
+
+  .dark-mode .suggestion-item{
+
+    color:white;
+
+  }
+
+  .dark-mode .suggestion-item:hover{
+
+    background:#334155;
+
+  }
+
+  .dark-mode .modal-content{
+
+    background:#111827;
+
+    color:white;
+
+  }
+
+  .search-input{
+
+    height:55px;
+
+    border-radius:14px;
+
+    font-size:18px;
+
+    padding-left:18px;
+
+  }
+
+  .suggestion-box{
+
+    position:absolute;
+
+    top:60px;
+
+    left:0;
+
+    right:0;
+
+    background:white;
+
+    border-radius:12px;
+
+    overflow:hidden;
+
+    box-shadow:
+            0 10px 25px rgba(0,0,0,.1);
+
+    z-index:999;
+
+  }
+
+  .dark-mode .search-input{
+
+    background:#1e293b !important;
+
+    color:white !important;
+
+    border:1px solid #475569 !important;
+
+  }
+
+  .dark-mode .search-input::placeholder{
+
+    color:#cbd5e1 !important;
+
+  }
+</style>
+
+<div class="modal fade"
+     id="searchModal">
+
+  <div class="modal-dialog">
+
+    <div class="modal-content">
+
+      <div class="modal-header">
+
+        <h5 class="modal-title">
+
+          지역 검색
+
+        </h5>
+
+        <button
+                class="btn-close"
+                data-bs-dismiss="modal">
+        </button>
+
+      </div>
+
+      <div class="modal-body">
+
+        <form action="/search"
+              onsubmit="return validateRegion()">
+
+          <div class="position-relative">
+
+            <input
+                    type="text"
+                    id="regionInput"
+                    name="keyword"
+                    class="form-control search-input"
+                    placeholder="서울, 부산, 제주 입력">
+
+            <div id="suggestions"
+                 class="suggestion-box">
+            </div>
+
+          </div>
+
+          <button
+                  type="submit"
+                  class="btn btn-primary w-100 mt-3">
+
+            검색
+
+          </button>
+
+          <datalist id="regionList">
+
+            <option value="서울">
+            <option value="부산">
+            <option value="대구">
+            <option value="인천">
+            <option value="광주">
+            <option value="대전">
+            <option value="울산">
+            <option value="세종">
+
+            <option value="경기">
+            <option value="강원">
+            <option value="충북">
+            <option value="충남">
+            <option value="경북">
+            <option value="경남">
+            <option value="전북">
+            <option value="전남">
+
+            <option value="제주">
+
+          </datalist>
+
+          <script th:inline="javascript">
+
+            const regions = /*[[${allRegionNames}]]*/ [];
+
+            document.addEventListener(
+                    "DOMContentLoaded",
+                    function(){
+
+                      const input =
+                              document.getElementById(
+                                      "regionInput"
+                              );
+
+                      const box =
+                              document.getElementById(
+                                      "suggestions"
+                              );
+
+                      if(!input) return;
+
+                      input.addEventListener(
+                              "input",
+                              function(){
+
+                                const value =
+                                        this.value.trim();
+
+                                box.innerHTML = "";
+
+                                if(value === ""){
+
+                                  box.style.display = "none";
+                                  return;
+                                }
+
+                                const matched =
+                                        regions.filter(
+                                                region =>
+                                                        region.includes(value)
+                                        );
+
+                                matched.forEach(
+                                        region => {
+
+                                          const div =
+                                                  document.createElement("div");
+
+                                          div.className =
+                                                  "suggestion-item";
+
+                                          div.innerText =
+                                                  region;
+
+                                          div.onclick =
+                                                  function(){
+
+                                                    input.value =
+                                                            region;
+
+                                                    box.style.display =
+                                                            "none";
+
+                                                  };
+
+                                          box.appendChild(div);
+
+                                        }
+                                );
+
+                                box.style.display =
+                                        matched.length
+                                                ? "block"
+                                                : "none";
+
+                              }
+                      );
+
+                    });
+
+          </script>
+
+          <script th:inline="javascript">
+
+            function validateRegion(){
+
+              const keyword =
+                      document.querySelector(
+                              'input[name="keyword"]'
+                      ).value.trim();
+
+              const regions = /*[[${allRegionNames}]]*/ [];
+
+              if(!regions.includes(keyword)){
+
+                alert(
+                        "등록되지 않은 지역입니다."
+                );
+
+                return false;
+              }
+
+              return true;
+            }
+
+          </script>
+
+        </form>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</div>
+
+<button
+        id="themeToggle"
+        class="theme-btn">
+
+  🌙
+
+</button>
+
+<script src="/theme.js"></script>
+
+</body>
+
+</html>
